@@ -1,21 +1,22 @@
 """
 Example 4. Finding camera parameters.
 """
-import os
 import argparse
 import glob
+import os
 
+import imageio
+import numpy as np
 import torch
 import torch.nn as nn
-import numpy as np
-from skimage.io import imread, imsave
 import tqdm
-import imageio
+from skimage.io import imread, imsave
 
 import neural_renderer as nr
 
 current_dir = os.path.dirname(os.path.realpath(__file__))
 data_dir = os.path.join(current_dir, 'data')
+
 
 class Model(nn.Module):
     def __init__(self, filename_obj, filename_ref=None):
@@ -90,7 +91,7 @@ def main():
         loss.backward()
         optimizer.step()
         images, _, _ = model.renderer(model.vertices, model.faces, torch.tanh(model.textures))
-        image = images.detach().cpu().numpy()[0].transpose(1,2,0)
+        image = images.detach().cpu().numpy()[0].transpose(1, 2, 0)
         imsave('/tmp/_tmp_%04d.png' % i, image)
         loop.set_description('Optimizing (loss %.4f)' % loss.data)
         if loss.item() < 70:

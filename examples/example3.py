@@ -2,21 +2,23 @@
 Example 3. Optimizing textures.
 """
 from __future__ import division
-import os
+
 import argparse
 import glob
+import os
 
+import imageio
+import numpy as np
 import torch
 import torch.nn as nn
-import numpy as np
-from skimage.io import imread, imsave
 import tqdm
-import imageio
+from skimage.io import imread, imsave
 
 import neural_renderer as nr
 
 current_dir = os.path.dirname(os.path.realpath(__file__))
 data_dir = os.path.join(current_dir, 'data')
+
 
 class Model(nn.Module):
     def __init__(self, filename_obj, filename_ref):
@@ -31,7 +33,7 @@ class Model(nn.Module):
         self.textures = nn.Parameter(textures)
 
         # load reference image
-        image_ref = torch.from_numpy(imread(filename_ref).astype('float32') / 255.).permute(2,0,1)[None, ::]
+        image_ref = torch.from_numpy(imread(filename_ref).astype('float32') / 255.).permute(2, 0, 1)[None, ::]
         self.register_buffer('image_ref', image_ref)
 
         # setup renderer
@@ -40,7 +42,6 @@ class Model(nn.Module):
         renderer.light_intensity_directional = 0.0
         renderer.light_intensity_ambient = 1.0
         self.renderer = renderer
-
 
     def forward(self):
         self.renderer.eye = nr.get_points_from_angles(2.732, 0, np.random.uniform(0, 360))
@@ -68,7 +69,7 @@ def main():
     model = Model(args.filename_obj, args.filename_ref)
     model.cuda()
 
-    optimizer = torch.optim.Adam(model.parameters(), lr=0.1, betas=(0.5,0.999))
+    optimizer = torch.optim.Adam(model.parameters(), lr=0.1, betas=(0.5, 0.999))
     loop = tqdm.tqdm(range(300))
     for _ in loop:
         loop.set_description('Optimizing')

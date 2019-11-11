@@ -2,21 +2,23 @@
 Example 2. Optimizing vertices.
 """
 from __future__ import division
-import os
+
 import argparse
 import glob
+import os
 
+import imageio
+import numpy as np
 import torch
 import torch.nn as nn
-import numpy as np
-from skimage.io import imread, imsave
 import tqdm
-import imageio
+from skimage.io import imread, imsave
 
 import neural_renderer as nr
 
 current_dir = os.path.dirname(os.path.realpath(__file__))
 data_dir = os.path.join(current_dir, 'data')
+
 
 class Model(nn.Module):
     def __init__(self, filename_obj, filename_ref):
@@ -43,7 +45,7 @@ class Model(nn.Module):
     def forward(self):
         self.renderer.eye = nr.get_points_from_angles(2.732, 0, 90)
         image = self.renderer(self.vertices, self.faces, mode='silhouettes')
-        loss = torch.sum((image - self.image_ref[None, :, :])**2)
+        loss = torch.sum((image - self.image_ref[None, :, :]) ** 2)
         return loss
 
 

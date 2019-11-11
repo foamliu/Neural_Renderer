@@ -2,7 +2,7 @@ from __future__ import division
 
 import os
 
-# import neural_renderer.cuda.load_textures as load_textures_cuda
+import neural_renderer.cuda.load_textures as load_textures_cuda
 import numpy as np
 import torch
 from skimage.io import imread
