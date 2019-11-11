@@ -1,22 +1,23 @@
 from __future__ import division
+
 import math
 
+import numpy
 import torch
 import torch.nn as nn
-import numpy
 
 import neural_renderer as nr
 
 
 class Renderer(nn.Module):
-    def __init__(self, image_size=256, anti_aliasing=True, background_color=[0,0,0],
+    def __init__(self, image_size=256, anti_aliasing=True, background_color=[0, 0, 0],
                  fill_back=True, camera_mode='projection',
                  K=None, R=None, t=None, dist_coeffs=None, orig_size=1024,
-                 perspective=True, viewing_angle=30, camera_direction=[0,0,1],
+                 perspective=True, viewing_angle=30, camera_direction=[0, 0, 1],
                  near=0.1, far=100,
                  light_intensity_ambient=0.5, light_intensity_directional=0.5,
-                 light_color_ambient=[1,1,1], light_color_directional=[1,1,1],
-                 light_direction=[0,1,0]):
+                 light_color_ambient=[1, 1, 1], light_color_directional=[1, 1, 1],
+                 light_direction=[0, 1, 0]):
         super(Renderer, self).__init__()
         # rendering
         self.image_size = image_size
@@ -48,7 +49,6 @@ class Renderer(nn.Module):
         else:
             raise ValueError('Camera mode has to be one of projection, look or look_at')
 
-
         self.near = near
         self.far = far
 
@@ -57,17 +57,18 @@ class Renderer(nn.Module):
         self.light_intensity_directional = light_intensity_directional
         self.light_color_ambient = light_color_ambient
         self.light_color_directional = light_color_directional
-        self.light_direction = light_direction 
+        self.light_direction = light_direction
 
         # rasterization
         self.rasterizer_eps = 1e-3
 
-    def forward(self, vertices, faces, textures=None, mode=None, K=None, R=None, t=None, dist_coeffs=None, orig_size=None):
+    def forward(self, vertices, faces, textures=None, mode=None, K=None, R=None, t=None, dist_coeffs=None,
+                orig_size=None):
         '''
         Implementation of forward rendering method
         The old API is preserved for back-compatibility with the Chainer implementation
         '''
-        
+
         if mode is None:
             return self.render(vertices, faces, textures, K, R, t, dist_coeffs, orig_size)
         elif mode is 'rgb':

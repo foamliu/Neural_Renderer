@@ -3,10 +3,12 @@ import torch.nn as nn
 
 import neural_renderer as nr
 
+
 class Mesh(object):
     '''
     A simple class for creating and manipulating trimesh objects
     '''
+
     def __init__(self, vertices, faces, textures=None, texture_size=4):
         '''
         vertices, faces and textures(if not None) are expected to be Tensor objects
@@ -19,7 +21,7 @@ class Mesh(object):
         # create textures
         if textures is None:
             shape = (self.num_faces, texture_size, texture_size, texture_size, 3)
-            self.textures = nn.Parameter(0.05*torch.randn(*shape))
+            self.textures = nn.Parameter(0.05 * torch.randn(*shape))
             self.texture_size = texture_size
         else:
             self.texture_size = textures.shape[0]

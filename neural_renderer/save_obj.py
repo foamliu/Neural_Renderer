@@ -1,10 +1,12 @@
 from __future__ import division
+
 import os
 
 import torch
 from skimage.io import imsave
 
-import neural_renderer.cuda.create_texture_image as create_texture_image_cuda
+
+# import neural_renderer.cuda.create_texture_image as create_texture_image_cuda
 
 
 def create_texture_image(textures, texture_size_out=16):
@@ -26,10 +28,10 @@ def create_texture_image(textures, texture_size_out=16):
     vertices = vertices.cuda()
     textures = textures.cuda()
     image = create_texture_image_cuda.create_texture_image(vertices, textures, image, 1e-5)
-    
+
     vertices[:, :, 0] /= (image.shape[1] - 1)
     vertices[:, :, 1] /= (image.shape[0] - 1)
-    
+
     image = image.detach().cpu().numpy()
     vertices = vertices.detach().cpu().numpy()
     image = image[::-1, ::1]
